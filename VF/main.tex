@@ -1,0 +1,135 @@
+\documentclass[12pt, a4paper]{report}
+\special{papersize=210mm, 297mm}
+\usepackage[romanian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[left=2.5cm, right=2.5cm, top=2.5cm]{geometry}
+\renewcommand{\baselinestretch}{1.4}
+\usepackage[toc,page]{appendix}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\graphicspath{{images/} {diagrams/}}
+
+\usepackage{fullpage}
+
+\usepackage{url}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{color}
+
+\lstset{frame=tb,
+	 language=java,
+	aboveskip=5mm, belowskip=3mm, showstringspaces=false,
+	columns=flexible, basicstyle={\small\ttfamily},
+	numbers=none, numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{> {\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\pagenumbering{roman}
+
+\begin{document}
+
+%======================================================================
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+
+\center 
+\vspace{-20pt}
+\includegraphics[width=100pt]{images/uvt_fmi_img.png}\\[1.0cm] 
+ 
+\textsc{\LARGE Universitatea de Vest din Timi\c{s}oara}\\[0.5cm] 
+\textsc{\Large Facultatea de Matematic\u{a} \c{s}i Informatic\u{a}}\\[0.5cm] 
+\textsc{\large Domeniul de Studii: \\Inginerie software}\\[4cm] 
+
+\textsc{\Huge Proiect Verificare Formală}\\[3,2cm]
+
+
+
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushleft} \large
+%\textbf{COORDONATOR:}\\
+%Florin Forti\c{s}
+%\end{flushleft}
+%\end{minipage}
+~
+\begin{minipage}{0.8\textwidth}
+\begin{flushright} \large
+\textbf{Proiect realizat de:} \\
+Kannengeisser Bianca\\
+Topliceanu Bogdan\\
+Bîzdoacă Mihai\\
+Vicol Mihai\\
+Oșan Mihai
+
+\end{flushright}
+\end{minipage}\\[1cm]
+
+
+\vfill
+{\large Timi\c{s}oara \\2022}\\ 
+
+ 
+%----------------------------------------------------------------------------------------
+
+%\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+
+\begin{comment}
+\textsc{\LARGE Introducere}\\[0.5cm]
+
+
+\vspace{0.5cm}
+\par
+Turismul este călătoria realizată în scopul recreării, odihnei sau pentru afaceri. Organizația Mondială a Turismului defineste turistii ca fiind persoane ce locuiesc sau calatoresc in afara zonei de resedinta pe parcursul a mai mult de 24 de ore, dar mai mutin decat un an.
+
+Turismul a devenit pe parcurusul anilor una dintre cele mai dezvoltate industrii din lume. Ca de exemplu in anul 2012 s-au inregistrat pentru prima oara peste un miliard de sosiri la nivel internațional, generând peste un trilion de dolari.
+
+Tema este foarte interesantă în contextul în care în zilele noastre turismul este in continua dezvoltare si din ce in ce mai multa lume gaseste o calatorie ca o evadare de la viata de zi cu zi.
+
+În acest context, în lucrarea de față voi prezenta Implementarea unei platforme WEB pentru destinatii turisitice.
+
+\end{comment}
+
+\tableofcontents{}
+%\addcontentsline{toc}{chapter}{Listă de figuri}
+%\listoffigures{}
+%\addcontentsline{toc}{chapter}{Listă de tabele}
+%\listoftables{}
+
+\newpage{}
+
+
+
+\newpage{}
+
+
+\chapter{Dataset}
+
+BLABLABLA
+
+
+
+\chapter{Alt capitol}
+
+
+
+mda
+
+
+\end{document}
