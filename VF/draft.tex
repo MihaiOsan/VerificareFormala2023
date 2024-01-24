@@ -1,0 +1,171 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{mwe}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\lstdefinestyle{myCustomMatlabStyle}{
+  language=Matlab,
+  numbers=left,
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=4,
+  showspaces=false,
+  showstringspaces=false
+}
+\lstset{basicstyle=\fontsize{8}{8}\selectfont\ttfamily,style=myCustomMatlabStyle}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+\urlstyle{same}
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	{\LARGE \textsc{Universitatea de Vest din Timisoara}\par}
+	\vspace{1cm}
+	{\Large \textsc{Versiune Draft}\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Verification of Neural Networks Competition\par}
+	\vspace{2cm}
+	{\Large\itshape Bianca Kannengiesser\\
+					Bogdan Topliceanu \\
+					Mihai Bîzdoacă\\
+					Mihai Oșan \\
+					Mihai Vicol\par}
+	\vfill
+	supervised by\par
+	Madalina Erascu 
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\section{Introducere}
+Rețelele neuronale profunde sunt o clasă de modele de învățare automată care încearcă să imite modul în care funcționează creierul uman pentru a rezolva probleme complexe. Un dezavantaj notabil al rețelelor neuronale profunde este sensibilitatea lor la mici schimbări în datele de intrare sau în parametrii modelului. Această sensibilitate poate avea consecințe serioase, mai ales în domenii critice precum securitatea cibernetică sau sistemele autonome. Una dintre abordările pentru a asigura mai multă încredere în funcționarea rețelelor neuronale în sisteme critice este dezvoltarea de tehnici de verificare formală. Aceasta implică utilizarea metodelor și instrumentelor formale pentru a demonstra proprietăți specifice ale rețelei neuronale, cum ar fi corectitudinea sau siguranța sub anumite condiții. Există mai multe metode și abordări pentru verificarea rețelelor neuronale, inclusiv metode bazate pe logică formală, satisfacție a restricțiilor, analiză statică și altele. În ciuda eforturilor în această direcție, verificarea rețelelor neuronale rămâne o provocare datorită complexității acestor modele și a volumului mare de date și parametri implicați.
+\section{Tool-uri}
+Există mai multe instrumente și framework-uri specializate pentru verificarea rețelelor neuronale. Acestea sunt utilizate pentru a evalua robustețea, corectitudinea și alți factori critici în funcționarea rețelelor neuronale. 
+
+\subsection{Nnenum}
+Nnenum (Neural Network Enumeration Tool) este un instrument pentru verificarea rețelelor neuronale, în special a celor cu funcții de activare ReLU (Rectified Linear Unit). Acesta a fost dezvoltat de Stanley Bak de la Stony Brook University și este descris în detaliu în lucrarea sa,  "Verification of ReLU Neural Networks with Optimized Abstraction Refinement". Nnenum se distinge prin abilitatea sa de a efectua verificări eficiente, folosind abstracții optimizate pentru a îmbunătăți viteza și acuratețea.
+
+Problema de verificare abordată implică asumarea unui set definit cu constrângeri liniare peste intrările rețelei și un al doilea set de stări nesigure definite peste ieșiri. nnenum analizează rețelele care constau în straturi complet conectate cu funcții de activare ReLU, extinzându-se și la alte tipuri de straturi, cum ar fi cele convoluționale.
+
+\subsubsection{Instalare Nnenum}
+
+Pentru a facilita utilizarea sa, nnenum oferă posibilitatea de a utiliza Docker pentru instalare, izolând complexitatea configurării în containere auto-suficiente. Această abordare aduce numeroase avantaje, precum asigurarea unui mediu de lucru consistent și izolat.
+
+Primul pas în utilizarea Docker pentru instalarea nnenum este instalarea Docker însuși. Docker este un instrument care permite utilizatorilor să creeze și să ruleze aplicații în medii izolate, numite containere. Aceste containere asigură o consistență între medii diferite, eliminând astfel problemele de compatibilitate. Descărcarea și instalarea Docker se poate face de pe site-ul oficial \url{https://www.docker.com}.
+
+Înainte de a rula Dockerfile-ul pentru nnenum, este necesar să clonăm repozitorului Git al nnenum. Acest pas asigură că avem cea mai recentă versiune a codului și toate fișierele necesare pentru instalare. Repozitorul se afla la: \url{https://github.com/stanleybak/nnenum/tree/master}.
+
+Avand Dockerfile-ul, următorul pas este construirea imaginii Docker. Acest proces se realizează în terminal, executând comanda:
+docker build . -t nnenum\_image.
+Această comandă transformă Dockerfile într-o imagine Docker numită nnenum.
+
+Imaginea Docker fiind construită, urmează rularea nnenum într-un container Docker. Acest pas este realizat printr-o simplă comandă care pornește un container bazat pe imaginea nnenum și oferă un shell interactiv în interiorul acestuia: docker run nnenum\_image bash.
+
+Imaginea creată rulează la final un script shell (run\_tests.sh) in care este apelat individual câte test din fiecare benchmark la care a fost inscris nnenum. Pentru a executa toate testele pentru acasxu am modificat acest script astfel: 
+
+\vspace{2mm}
+
+\begin{lstlisting}[language=bash]
+#!/bin/bash -e
+
+# Define the directories containing the ONNX models and VNNLIB properties
+onnx_dir="examples/acasxu/data"
+vnnlib_dir="examples/acasxu/data"
+
+# Start the script
+echo "Running ACAS Xu tests with nnenum."
+
+# Iterate over each ONNX model
+for onnx_file in "examples/acasxu/data"/*.onnx; do
+  # Iterate over each VNNLIB property
+   for vnnlib_file in "examples/acasxu/data"/*.vnnlib; do
+    echo "Testing $(basename "$onnx_file") with $(basename "$vnnlib_file")"
+    python3 -m nnenum.nnenum "$onnx_file" "$vnnlib_file"
+    echo "Completed test for $(basename "$onnx_file") with $(basename "$vnnlib_file")"
+    echo "------------------------------------------------------------"
+    echo "------------------------------------------------------------"
+    echo
+    echo
+   done
+done
+
+echo "Passed all tests."
+
+\end{lstlisting}
+
+\vspace{5mm}
+\subsection{Alpha-Beta-Crown}
+Alpha-Beta-CROWN reprezintă un sistem de verificare open-source pentru rețele neuronale, fundamentat pe un algoritm eficient de propagare a limitelor și tehnici de branch-and-bound. Acesta oferă o abordare robustă pentru evaluarea și asigurarea proprietăților rețelelor neuronale, fiind construit pe principii care integrează atât alpha, cât și beta, în vederea optimizării performanțelor.
+
+CROWN acționează ca un sistem general specializat în certificarea robusteței rețelelor neuronale. Adaptându-se la funcțiile generale de activare pentru anumite puncte de date de intrare, CROWN oferă o metodologie extinsă pentru a evalua și asigura comportamentul corect al rețelelor în fața perturbațiilor. 
+
+Beta-CROWN aduce în discuție o metodă inovatoare de propagare a limitelor, capabilă să codifice în totalitate diviziunile neuronale. Acest lucru este realizat prin intermediul parametrilor optimizabili Beta, construiți cu precădere din spațiul primal sau dual. 
+
+Alpha-CROWN, în schimb, este conceput pentru a aborda scenarii de verificare incomplete. Integrând o limită CROWN optimizată, Alpha-CROWN oferă un echilibru între acuratețea verificării și eficiența computatională.
+
+În ansamblu, aceste componente alpha, beta și CROWN constituie un ecosistem complex și flexibil pentru verificarea și certificarea rețelelor neuronale, contribuind astfel la avansarea în înțelegerea și utilizarea acestora în aplicații variate.
+\subsubsection{Instalare Alpha-Beta-Crown}
+Pașii pentru instalarea și rularea Alpha,Beta-CROWN:
+Clonăm repository-ul Alpha,Beta-CROWN de pe GitHub, inclusiv submodulul autoLiRPA, dar si vnncomp2023\_Benchmark:
+\begin{lstlisting}
+git clone --recursive https://github.com/Verified-Intelligence/alpha-beta-CROWN.git
+cd alpha-beta-CROWN
+\end{lstlisting}
+Se recomandă folosirea unui mediu virtual pentru a evita conflicte între dependențe. Astfel, se elimină un mediu existent și se creeaza unul nou pentru Alpha,Beta-CROWN:
+\begin{lstlisting}
+conda deactivate   #Dezactiveaza mediul curent (daca este activ)
+conda env remove --name alpha-beta-crown   #Elimina mediu existent, daca este cazul
+conda env create -f complete_verifier/environment.yaml --name alpha-beta-crown   #Creeaza si instaleaza dependente in noul mediu
+conda activate alpha-beta-crown   Activeaza noul mediu
+\end{lstlisting}
+În contextul programării pe GPU (unitate de procesare grafică), CUDA reprezintă un model de programare și un set de instrumente dezvoltate de către NVIDIA. CUDA permite dezvoltatorilor să utilizeze puterea de calcul a GPU-urilor NVIDIA pentru a accelera anumite tipuri de sarcini, cum ar fi calculele intensive, în special cele din domeniul științific și al învățării automate (machine learning).
+Pentru rulare se utilizeaza scriptul abcrown.py. Toți parametrii sunt definiți într-un fișier de configurare YAML pentru a defini condițiile sub care se efectuează verificarea și a adapta algoritmul la specificul problemei sau setului de date utilizat. De exemplu, pentru a verifica robustețea unei rețele CIFAR-10 ResNet, folosim:
+\begin{lstlisting}
+conda activate alpha-beta-crown  # Activeaza mediu Conda
+cd complete_verifier
+python abcrown.py --config complete_verifier/exp_configs/vnncomp23/acasxu.yaml
+\end{lstlisting}
+
+\section{Dataset}
+
+\subsection{ACAS XU}
+
+ACAS Xu se referă la un set de benchmark-uri legate de verificarea rețelelor neurale, în special în contextul sistemelor de evitare a coliziunilor în aviație. ACASXu este o abreviere pentru "Aircraft Collision Avoidance System - Xu". Acest ansamblu de teste este conceput pentru a evalua robustețea și siguranța modelelor de învățare automată utilizate în sistemele de evitare a coliziunilor aeriene.
+
+Utilizează o combinație de senzori pentru a detecta aeronavele din apropiere, inclusiv transpondere ADS-B (dispozitiv ce ofera informatii precum poziție, viteză, altitudine etc), radar și senzori EO/IR (Electro-Optical si Infrared, adica imagini vizuale si termice). Sistemul folosește apoi o logică de decizie bazată pe un model Markov pentru a genera instrucțiuni de manevră pentru a evita coliziunea.
+
+Logica de decizie a ACAS Xu funcționează prin calcularea probabilității de coliziune între UAS și aeronavele din apropiere. Dacă probabilitatea de coliziune este mai mare decât o anumită valoare prag, ACAS Xu va genera instrucțiuni de manevră pentru a evita coliziunea.
+
+Instrucțiunile de manevră sunt generate folosind o abordare de minimizare a costurilor. Această abordare încearcă să găsească instrucțiunile care vor minimiza riscul de coliziune, în timp ce vor minimiza și impactul asupra aeronavei UAS.
+
+O descriere mai detaliata:
+
+\begin{itemize}
+  \item 
+    Detectarea aeronavelor în apropiere: ACAS Xu utilizează o combinație de senzori pentru a detecta aeronavele din apropiere. 
+  \item Estimarea stării aeronavelor: ACAS Xu utilizează informațiile de la senzori pentru a estima starea aeronavelor din apropiere. Acestea includ poziția, viteza și direcția aeronavelor.
+  \item Calcularea probabilității de coliziune: ACAS Xu utilizează modelul Markov pentru a calcula probabilitatea de coliziune între UAS și aeronavele din apropiere.
+   \item Generarea instrucțiunilor de manevră: ACAS Xu utilizează abordarea de minimizare a costurilor pentru a genera instrucțiuni de manevră care vor minimiza riscul de coliziune.
+\end{itemize}
+
+\subsection{Structura datelor}
+
+ONNX este un format pentru fișierele ce reprezintă modele de învățare automată, conținând astfel arhitectura unei rețele neurale. Această arhitectură arată modul în care rețeaua procesează și analizează datele în mai multe straturi. Stratul de intrare primește datele, asupra cărora vor fi efectuate o serie de calcule matematice (cum ar fi înmulțirea, adunarea, scăderea etc.). Rezultatele reprezintă predicții sau clasificări, în funcție de scopul rețelei, și fac parte din stratul de ieșire.
+
+VNN-LIB este un format pentru specificarea proprietăților și cerințelor pe care o rețea neurală ar trebui să le îndeplinească. Datele primite în stratul de intrare, constrangerile si/sau conditiile care ar trebui indeplinite in timpul verificarii retelei sunt reprezentate în acest format.
+
+În benchmark-ul ACAS Xu, fișierele ONNX definesc modul în care rețeaua procesează datele de intrare, care sunt specificate în fișierele VNN-LIB. Rezultatele sunt apoi evaluate în raport cu condițiile stabilite alături de informațiile furnizate. Aceste condiții sunt concepute pentru a asigura comportamentul sigur al rețelei în scenariile care ar putea fi întâlnite în contextele reale de aviație. Dacă ieșirea îndeplinește constrângerile specificate, rețeaua este considerată că funcționează corespunzător în acel scenariu; în caz contrar, indică o posibilă problemă sau eșec în îndeplinirea cerințelor.
+
+\end{document}
