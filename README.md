@@ -12,3 +12,15 @@ Săptămâna 11-17 dec.:
 Săptămâna 18-25 dec.:
 -rulare alpha-beta-crown cu acasxu
 -scrierea versiunii draft 
+
+Săptămâna 8-14 ian.:
+-modificare versiune draft
+
+Săptămâna 15-21 ian.:
+-generare rezultate nnenum 
+-generare rezultate alpha-beta
+
+Săptămâna 22-25 ian.:
+-finalizare raport 
+-creare prezentare 
+-inregistrare demo
